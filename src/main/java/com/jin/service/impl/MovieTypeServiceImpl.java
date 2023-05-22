@@ -8,6 +8,7 @@ import com.jin.pojo.MovieType;
 import com.jin.service.MovieTypeService;
 import com.jin.mapper.MovieTypeMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -44,19 +45,42 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
 
     }
 
+    @Transactional
     @Override
-    public void updateTwo(MovieType movieType) {
+    public void updateTwo(Integer id, String movieType) {
+        //获取type表的数据进行更改
+        MovieType movieType1 = this.baseMapper.selectById(id);
+        String firstType = movieType1.getMovieType();
 
-        //传过来的有id，就是修改数据
-        this.baseMapper.update(movieType,new LambdaQueryWrapper<MovieType>().eq(MovieType::getMovieType,movieType.getMovieType()));
+        //更改movie表
+        Movie movie = movieMapper.selectOne(new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType, firstType));
+        movie.setMovieType(movieType);
+        movieMapper.update(movie,new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType,firstType));
 
-        //顺带更改movie表里面的数据
-        String movieType1 = movieType.getMovieType();
-        Movie movie = movieMapper.selectOne(new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType, movieType1));
-
-
+        //更改type表
+        movieType1.setMovieType(movieType);
+        this.baseMapper.update(movieType1,new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
 
     }
+
+    @Override
+    public void removeType(Integer id) {
+        //删除，要判断是否为0，为0的话删除就是逻辑删除
+        MovieType movieType = this.baseMapper.selectById(id);
+
+        Integer number = movieType.getNumber();
+
+        if (number == 0){
+            this.baseMapper.delete(new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
+            return;
+        }
+        //正常删除
+        number = number-1;
+        movieType.setNumber(number);
+        this.baseMapper.update(movieType,new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
+
+    }
+
 }
 
 

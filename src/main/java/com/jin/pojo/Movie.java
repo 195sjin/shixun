@@ -80,7 +80,7 @@ public class Movie implements Serializable {
      * 
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateUser;
+    private String updateUser;
 
     /**
      * 0表示未被删除，1表示已经被删除

@@ -29,9 +29,18 @@ public class MovieTypeController {
     }
 
     @PostMapping("/update")
-    private Result<?> update(@RequestBody MovieType movieType){
-        //修改两张表
-        movieTypeService.updateTwo(movieType);
+    public Result<?> update(@RequestParam("id") Integer id,
+                             @RequestParam("movieType") String movieType){
+
+        movieTypeService.updateTwo(id,movieType);
+
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result<?> delete(@PathVariable("id") Integer id){
+
+        movieTypeService.removeType(id);
 
         return Result.success();
     }
