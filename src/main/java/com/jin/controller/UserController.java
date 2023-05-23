@@ -7,6 +7,9 @@ import com.jin.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ public class UserController {
     @PostMapping("/login")
     public Result<Object> login(@RequestBody User user){
         User loginUser = userService.getUser(user);
+        String name = loginUser.getName();
+
         if (loginUser != null){
             return Result.success(loginUser);
         }

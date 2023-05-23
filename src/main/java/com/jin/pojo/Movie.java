@@ -47,7 +47,7 @@ public class Movie implements Serializable {
     /**
      * 
      */
-    private Date mins;
+    private Integer mins;
 
     /**
      * 
@@ -62,7 +62,7 @@ public class Movie implements Serializable {
     /**
      * 
      */
-    private Integer newsId;
+    private String newsId;
 
     /**
      * 

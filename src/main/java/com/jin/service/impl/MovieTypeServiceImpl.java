@@ -80,7 +80,7 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
      * @param id
      */
     @Override
-    public void removeType(Integer id) {
+    public int removeType(Integer id) {
         //删除，要判断是否为0，为0的话删除就是逻辑删除
         MovieType movieType = this.baseMapper.selectById(id);
 
@@ -92,7 +92,7 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
 
         if (size == 0 ){
             this.baseMapper.delete(new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
-            return;
+            return 1;
         }
 
         //在type表里面的删除是不可取的，除非是逻辑删除，也就是movie表里面也没这个数据了，才能删
@@ -100,6 +100,7 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
         number = size;
         movieType.setNumber(number);
         this.baseMapper.update(movieType,new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
+        return 0;
 
     }
 

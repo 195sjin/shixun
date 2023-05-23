@@ -54,7 +54,7 @@ public class MovieController {
     }
 
     //哪个电影的新闻
-    @PostMapping("/udNews/{id}")
+    @PutMapping("/udNews/{id}")
     public Result<?> udNews(@PathVariable("id") Integer id, @RequestBody News news){
 
         movieService.change(id,news);

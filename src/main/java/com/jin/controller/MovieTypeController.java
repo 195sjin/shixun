@@ -31,7 +31,7 @@ public class MovieTypeController {
     }
 
     //更改所用的id是type表的id
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Result<?> update(@RequestParam("id") Integer id,
                              @RequestParam("movieType") String movieType){
 
@@ -43,10 +43,14 @@ public class MovieTypeController {
     @DeleteMapping("/delete/{id}")
     public Result<?> delete(@PathVariable("id") Integer id){
 
-        movieTypeService.removeType(id);
-
-        return Result.success();
+        int i = movieTypeService.removeType(id);
+        if (i == 1){
+            return Result.success("删除成功");
+        }
+        return Result.success("删除失败");
     }
+
+
     @GetMapping()
     public Result<?> getAllType(){
         List<MovieType> list = movieTypeService.list();

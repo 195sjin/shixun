@@ -14,6 +14,6 @@ public interface MovieTypeService extends IService<MovieType> {
 
     void updateTwo(Integer id, String movieType);
 
-    void removeType(Integer id);
+    int removeType(Integer id);
 
 }
