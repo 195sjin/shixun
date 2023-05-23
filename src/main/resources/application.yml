@@ -5,10 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql:///mv
     username: root
-    password: "020313"
-  redis:
-    port: 6379
-    host: localhost
+    password: xth
 
 logging:
   level:
