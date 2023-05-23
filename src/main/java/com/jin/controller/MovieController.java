@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
  * @Author xiaojin
  * @Date 2023/5/22 15:04
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
@@ -68,6 +70,11 @@ public class MovieController {
         return Result.success("新增新闻成功");
     }
 
+    @GetMapping
+    public Result<?> getAllMovie(){
+        List<Movie> list = movieService.list();
+        return new Result<>(20000,"查询成功啦",list);
+    }
 
 
 }

@@ -12,6 +12,7 @@ import javax.annotation.Resource;
  * @Author xiaojin
  * @Date 2023/5/22 21:35
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/news")
 public class NewsController {

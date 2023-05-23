@@ -14,6 +14,7 @@ import java.util.Map;
  * @Author xiaojin
  * @Date 2023/5/22 13:11
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/user")
 public class UserController {
