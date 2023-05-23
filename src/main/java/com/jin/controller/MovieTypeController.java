@@ -31,7 +31,7 @@ public class MovieTypeController {
     }
 
     //更改所用的id是type表的id
-    @PostMapping("/update")
+    @PutMapping("/update")
     public Result<?> update(@RequestParam("id") Integer id,
                              @RequestParam("movieType") String movieType){
 
