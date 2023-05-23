@@ -28,7 +28,7 @@ public class UserController {
         if (loginUser != null){
             return Result.success(loginUser);
         }
-        return Result.fail("账号或密码错误");
+        return Result.fail(20001,"账号或密码错误");
     }
 
 

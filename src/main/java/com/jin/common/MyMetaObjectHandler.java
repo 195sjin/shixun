@@ -18,6 +18,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         this.setFieldValByName("updateTime", new Date(), metaObject);
         this.setFieldValByName("createUser","admin",metaObject);
         this.setFieldValByName("updateUser","admin",metaObject);
+        this.setFieldValByName("isDeleted",0,metaObject);
     }
 
     @Override

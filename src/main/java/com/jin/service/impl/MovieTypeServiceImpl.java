@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
 * @author 子衿啊
@@ -30,16 +31,23 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
         wrapper.eq(MovieType::getMovieType,movieType);
 
         MovieType type = this.baseMapper.selectOne(wrapper);
+
+        //去movie里面找
+        List<Movie> movies = movieMapper.selectList(new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType, movieType));
+        int size = movies.size();
+
+
         //没有查出来就是新增一条数据，查出来了就是修改
-        if (type == null){
+        if (type == null && size == 0){
             MovieType movieType1 = new MovieType();
             movieType1.setMovieType(movieType);
             this.baseMapper.insert(movieType1);
             return;
         }
+
         //修改
-        Integer number = type.getNumber();
-        number++;
+        Integer number = size;
+        assert type != null;
         type.setNumber(number);
         this.baseMapper.updateById(type);
 
@@ -53,9 +61,13 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
         String firstType = movieType1.getMovieType();
 
         //更改movie表
-        Movie movie = movieMapper.selectOne(new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType, firstType));
-        movie.setMovieType(movieType);
-        movieMapper.update(movie,new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType,firstType));
+        List<Movie> moviesList = movieMapper.selectList(new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType, firstType));
+
+        for (Movie movie:moviesList) {
+            movie.setMovieType(movieType);
+            //movieMapper.update(movie,new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType,firstType));
+            movieMapper.updateById(movie);
+        }
 
         //更改type表
         movieType1.setMovieType(movieType);
@@ -63,19 +75,29 @@ public class MovieTypeServiceImpl extends ServiceImpl<MovieTypeMapper, MovieType
 
     }
 
+    /**
+     * 假的删除，应该是在movie表里面没有这种类型的时候，才能删除。
+     * @param id
+     */
     @Override
     public void removeType(Integer id) {
         //删除，要判断是否为0，为0的话删除就是逻辑删除
         MovieType movieType = this.baseMapper.selectById(id);
 
+        //获取到movie表中有多少该类型的电影
+        List<Movie> movies = movieMapper.selectList(new LambdaQueryWrapper<Movie>().eq(Movie::getMovieType, movieType.getMovieType()));
+        int size = movies.size();
+
         Integer number = movieType.getNumber();
 
-        if (number == 0){
+        if (size == 0 ){
             this.baseMapper.delete(new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
             return;
         }
-        //正常删除
-        number = number-1;
+
+        //在type表里面的删除是不可取的，除非是逻辑删除，也就是movie表里面也没这个数据了，才能删
+
+        number = size;
         movieType.setNumber(number);
         this.baseMapper.update(movieType,new LambdaQueryWrapper<MovieType>().eq(MovieType::getId,id));
 

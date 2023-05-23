@@ -2,6 +2,9 @@ package com.jin.service;
 
 import com.jin.pojo.Movie;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jin.pojo.News;
+
+import java.util.Map;
 
 /**
 * @author 子衿啊
@@ -11,5 +14,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface MovieService extends IService<Movie> {
 
 
+    void change(Integer id, News news);
 
+    void saveNews(Integer id,News news);
+
+    void saveAndChange(Movie movie);
 }

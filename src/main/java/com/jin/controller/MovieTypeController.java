@@ -25,16 +25,17 @@ public class MovieTypeController {
         //根据传来的参数查，是新增分俩情况，一组是原本就有，一组是原本没有
         movieTypeService.select(movieType);
 
-        return Result.success();
+        return Result.success("新增成功");
     }
 
+    //更改所用的id是type表的id
     @PostMapping("/update")
     public Result<?> update(@RequestParam("id") Integer id,
                              @RequestParam("movieType") String movieType){
 
         movieTypeService.updateTwo(id,movieType);
 
-        return Result.success();
+        return Result.success("更改成功");
     }
 
     @DeleteMapping("/delete/{id}")
