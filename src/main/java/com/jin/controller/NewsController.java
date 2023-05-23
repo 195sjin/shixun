@@ -7,6 +7,7 @@ import com.jin.service.NewsService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author xiaojin
@@ -39,7 +40,11 @@ public class NewsController {
         newsService.removeById(id);
 
         return Result.success();
-
+    }
+    @GetMapping
+    public  Result<?> getAllNews(){
+        List<News> list = newsService.list();
+        return new Result<>(20000,"查询成功",list);
     }
 
 
