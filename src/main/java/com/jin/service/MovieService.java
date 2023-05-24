@@ -14,9 +14,13 @@ import java.util.Map;
 public interface MovieService extends IService<Movie> {
 
 
-    void change(Integer id, News news);
+    void change(Integer newsId, News news);
 
     void saveNews(Integer id,News news);
 
     void saveAndChange(Movie movie);
+
+    Map<String, Object> getAllNews(Integer id);
+
+    void updateM(Integer id, Movie movie);
 }

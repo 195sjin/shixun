@@ -12,6 +12,9 @@ import com.jin.mapper.MovieMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,13 +33,9 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie>
     private MovieTypeMapper movieTypeMapper;
 
     @Override
-    public void change(Integer id, News news) {
+    public void change(Integer newsId, News news) {
 
-        Movie movie = this.baseMapper.selectById(id);
-        Integer newsId = movie.getNewsId();
-
-       newsMapper.update(news, new LambdaQueryWrapper<News>().eq(News::getId, newsId));
-
+        newsMapper.update(news, new LambdaQueryWrapper<News>().eq(News::getId, newsId));
 
     }
 
@@ -45,13 +44,14 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie>
         newsMapper.insert(news);
 
         News news1 = newsMapper.selectOne(new LambdaQueryWrapper<News>().eq(News::getTitle, news.getTitle()));
-        Integer news1Id = news1.getId();
+        String newsIdIn = news1.getId().toString();
 
         Movie movie = this.baseMapper.selectById(id);
-        movie.setId(0);
-        movie.setNewsId(news1Id);
+        String newsIdOld = movie.getNewsId();
 
-        this.baseMapper.insert(movie);
+        movie.setNewsId(newsIdOld +","+ newsIdIn);
+
+        this.baseMapper.updateById(movie);
 
 
     }
@@ -74,6 +74,55 @@ public class MovieServiceImpl extends ServiceImpl<MovieMapper, Movie>
         number++;
         movieType1.setNumber(number);
         movieTypeMapper.update(movieType1,new LambdaQueryWrapper<MovieType>().eq(MovieType::getMovieType,movieType));
+
+    }
+
+    @Override
+    public Map<String, Object> getAllNews(Integer id) {
+        Movie movie = this.baseMapper.selectById(id);
+
+        List<String> idList = Arrays.asList(movie.getNewsId().split(","));
+
+        Map<String, Object> map = new HashMap<>();
+        for (String s:idList) {
+            int i = Integer.parseInt(s);
+            News news = newsMapper.selectById(i);
+            map.put(s,news);
+        }
+        return map;
+    }
+
+    @Override
+    public void updateM(Integer id, Movie movie) {
+
+        String firstType = this.baseMapper.selectById(id).getMovieType();
+        MovieType movieType3 = movieTypeMapper.selectOne(new LambdaQueryWrapper<MovieType>().eq(MovieType::getMovieType, firstType));
+
+        String movieType = movie.getMovieType();
+
+        MovieType movieType1 = movieTypeMapper.selectOne(new LambdaQueryWrapper<MovieType>().eq(MovieType::getMovieType, movieType));
+
+        if (movieType1 == null){
+            MovieType movieType2 = new MovieType();
+            movieType2.setMovieType(movieType);
+            movieType2.setNumber(1);
+            movieTypeMapper.insert(movieType2);
+            return;
+        }
+
+        if (!firstType.equals(movieType)){
+            Integer number1 = movieType3.getNumber();
+            number1--;
+            movieType3.setNumber(number1);
+            movieTypeMapper.update(movieType3,new LambdaQueryWrapper<MovieType>().eq(MovieType::getMovieType,firstType));
+
+            Integer number = movieType1.getNumber();
+            number++;
+            movieType1.setNumber(number);
+            movieTypeMapper.update(movieType1,new LambdaQueryWrapper<MovieType>().eq(MovieType::getMovieType,movieType));
+        }
+
+        this.baseMapper.update(movie,new LambdaQueryWrapper<Movie>().eq(Movie::getId,id));
 
     }
 }

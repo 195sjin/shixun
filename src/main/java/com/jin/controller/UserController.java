@@ -1,5 +1,6 @@
 package com.jin.controller;
 
+import com.jin.common.BaseContext;
 import com.jin.common.Result;
 import com.jin.pojo.User;
 import com.jin.service.UserService;
@@ -27,11 +28,13 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public Result<Object> login(@RequestBody User user){
+    public Result<Object> login(@RequestBody User user,HttpServletRequest request){
         User loginUser = userService.getUser(user);
         String name = loginUser.getName();
 
         if (loginUser != null){
+            request.getSession().setAttribute("name",name);
+
             return Result.success(loginUser);
         }
         return Result.fail(20001,"账号或密码错误");
