@@ -41,8 +41,8 @@ public class MovieController {
 
 
     //上传文件,给某个电影上传
-    @PostMapping("/upload/{id}")
-    public Result<?> upload(@PathVariable("id") Integer id,@RequestParam("file")MultipartFile multipartFile) throws IOException {
+    @PostMapping("/upload")
+    public Result<?> upload(@RequestParam("file")MultipartFile multipartFile) throws IOException {
 
         //根据文件名生成指定的请求url
         String originalFilename = multipartFile.getOriginalFilename();
@@ -55,11 +55,12 @@ public class MovieController {
         //借助HttpUtil工具类发送POST请求
         HttpUtil.post(targetURL, uploadBodyMap);
 
-        Movie movie = movieMapper.selectById(id);
-        movie.setFilePath(fileUrl);
-        movieMapper.update(movie,new LambdaQueryWrapper<Movie>().eq(Movie::getId,id));
+        HashMap<String,String> data = new HashMap<>();
 
-        return  Result.success("上传影片内容成功");
+        data.put("filePath",fileUrl);
+
+
+        return  Result.success(data,"上传影片内容成功");
 
     }
 
