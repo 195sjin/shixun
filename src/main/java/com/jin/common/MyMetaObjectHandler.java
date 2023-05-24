@@ -16,8 +16,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         this.setFieldValByName("createTime", new Date(), metaObject);
         this.setFieldValByName("updateTime", new Date(), metaObject);
-        this.setFieldValByName("createUser",BaseContext.getCurrentName(),metaObject);
-        this.setFieldValByName("updateUser",BaseContext.getCurrentName(),metaObject);
+        this.setFieldValByName("createUser","admin",metaObject);
+        this.setFieldValByName("updateUser","admin",metaObject);
         this.setFieldValByName("isDeleted",0,metaObject);
     }
 
@@ -25,8 +25,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         this.setFieldValByName("createTime",new Date(),metaObject);
         this.setFieldValByName("updateTime",new Date(),metaObject);
-        this.setFieldValByName("createUser",BaseContext.getCurrentName(),metaObject);
-        this.setFieldValByName("updateUser",BaseContext.getCurrentName(),metaObject);
+        this.setFieldValByName("createUser","admin",metaObject);
+        this.setFieldValByName("updateUser","admin",metaObject);
 
     }
 }
